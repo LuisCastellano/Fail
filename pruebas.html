@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    
+    <script>
+    function sel(c){
+    
+    if(c.length < 1){
+    fill();
+    }
+    
+var formu=document.forms['formulario'];
+var caracteres=c.length;
+var coincidencias=[];
+
+formu['lista'].style.visibility="visible";
+console.log(c);
+
+var sel = document.getElementById("lista"); 
+
+for (var i = 0; i < sel.length; i++) {
+    //  Aca haces referencia al "option" actual
+    var opt = sel[i];
+   if((opt.text.toString().indexOf(c) > -1) == true){
+   console.log(coincidencias);
+    coincidencias.push(opt.text);
+   
+   }else{
+   continue;}
+}
+$('#lista').html('');
+ for (var i = 0; i < coincidencias.length; i++) {
+ console.log(coincidencias);
+$('#lista').append($('<option>', {
+                    value: coincidencias[i],
+                    text: coincidencias[i]
+                  }));
+                  
+}
+return;
+
+}
+    
+    
+    
+    function fill(){
+    $('#lista').html('');
+    try{
+ google.script.run.withSuccessHandler(function(arr) {
+                
+                for (var i=0; i<arr.length; i++){
+               //console.log(arr[i].name);
+               $('#lista').append($('<option>', {
+                    value: arr[i].orgUnitPath,
+                    text: arr[i].name
+                  }));
+                  }
+                  return "ok";
+            }).getUO();
+            return;
+            
+            }catch(e){
+            return "error";
+            }
+
+}
+    </script>
+  </head>
+  
+  <body>
+  <button onclick="fill()">load</button>
+<form action="" name="formulario" >
+<input type="text" name="buscar" onKeyUp="sel(this.value)" style="width:200px;"><br>
+<select name="lista" id="lista" size="5" style="width:200px;visibility:visible">
+
+</select>
+</form>
+ <!-- Cargamos la libreria jquery de google -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    fill();
+});
+</script>
+  </body>
+</html>
+
+
